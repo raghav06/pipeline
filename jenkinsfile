@@ -1,4 +1,3 @@
-@Library("atc-jenkins-shared-library")
 import jenkins.model.Jenkins;
 import hudson.model.FreeStyleProject;
 import hudson.tasks.Shell;
