@@ -1,12 +1,20 @@
-import jenkins.model.Jenkins;
-import hudson.model.FreeStyleProject;
-import hudson.tasks.Shell;
+node {
+  try {
+    def seconds = readFile("/tmp/test.txt")
 
-job = Jenkins.instance.createProject(FreeStyleProject, 'hello world')
-
-job.buildersList.add(new Shell('echo hello world'))
-
-job.save()
-
-build = job.scheduleBuild2(5, new hudson.model.Cause.UserIdCause())
-
+      echo "seconds begin"
+      echo seconds
+      echo "seconds done"
+      parallel firstBranch: {
+      // do something
+      build job: 'SleepAnHour', parameters: [string(name: 'sleep_seconds', value: seconds)]
+    }, secondBranch: {
+      // do something else
+      build job: 'SleepTwoHours', parameters: [string(name: 'sleep_seconds', value: seconds)]
+        },
+         failFast: true
+      }
+  finally {
+    echo "finally"
+      }
+}
